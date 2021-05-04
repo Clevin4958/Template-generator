@@ -5,7 +5,7 @@
 import numpy as np
 import csv
 from math import ceil
-def generate_RR(n, double=False, map=None):
+def generate_RR(n, double=False, mapping=None):
     '''
     Generate round robin line-up for n teams in a round robin event
     Using algorithm from https://en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm
@@ -13,10 +13,15 @@ def generate_RR(n, double=False, map=None):
     -----------
     n: int
         number of teams
+    
+    double: bool
+        double the number of matches
+    mapping: n * 1 array
+        actual team number used
 
     Returns:
     --------
-    mat: n * n matrix
+    mat: n * n int numpy array
         ith row jth column represent the opponent for team i on round j
 
     Notes:
@@ -49,10 +54,15 @@ def generate_RR(n, double=False, map=None):
         # put last team to first place
         teams = np.concatenate([[teams[-1]], teams[:-1]])
 
+    matches = matches.astype('int32')
     # double RR
     if double:
         matches = np.concatenate([matches, matches], axis=0)
 
+    # map team number
+    if mapping != None:
+        mapping = np.array(mapping)
+        matches = mapping[matches-1]
     return matches
 
 def gen_csv(matches, highest_set=2):
@@ -106,6 +116,26 @@ def gen_csv(matches, highest_set=2):
     # concat headers
     result = np.concatenate([[header, table_row], result], axis=0)
     return result.tolist()
+
+def join_h_matches(matches, order=None):
+    '''
+    Join an array of matches horizontally and sort them according to order provided
+
+    Parameter:
+    ----------
+    matches: 3d list
+        a list with n horizontal sections in (numpy ndarray), where each section contain same number of rows (matches)
+    order: 1d list
+        the order of team number as they appear in the schedules
+    '''
+    matches = np.concatenate(matches, axis=1)
+
+    if order != None:
+        # make the order 0 indexing
+        order = list(map(lambda x:x-1, order))
+        # map matches using order provided
+        matches[:, order] = matches[:, list(range(len(order)))]
+    return matches
 
 def export(content, file_name):
     with open(file_name, 'w', newline='') as f:
