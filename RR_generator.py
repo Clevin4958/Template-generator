@@ -1,7 +1,11 @@
+# Round Robin compscore file generator
+# Author: Kevin Hu
+# Date: 2021/05/04
+
 import numpy as np
 import csv
 from math import ceil
-def generate_RR(n):
+def generate_RR(n, double=False, map=None):
     '''
     Generate round robin line-up for n teams in a round robin event
     Using algorithm from https://en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm
@@ -44,7 +48,11 @@ def generate_RR(n):
         matches = np.append(matches, [flatten_teams(teams)], axis=0)
         # put last team to first place
         teams = np.concatenate([[teams[-1]], teams[:-1]])
-        # print(flatten_teams(teams))
+
+    # double RR
+    if double:
+        matches = np.concatenate([matches, matches], axis=0)
+
     return matches
 
 def gen_csv(matches, highest_set=2):
@@ -104,6 +112,3 @@ def export(content, file_name):
         write = csv.writer(f, lineterminator=',\r\n')
         write.writerows(content)
 
-if __name__ == '__main__':
-    data = gen_csv(generate_RR(12))
-    export(data, '12 team RR.csv')

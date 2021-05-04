@@ -115,3 +115,4 @@ dmypy.json
 
 # ignore csv
 *.csv
+akarana_teams.py
