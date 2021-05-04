@@ -74,7 +74,6 @@ def gen_csv(matches, highest_set=2):
     # prepare set number columns
     bd_sets = []
     highest_set = 2
-    m = 5
     if highest_set == -1:
         bd_sets = np.array(range(1, m+1))
     else:
@@ -106,5 +105,5 @@ def export(content, file_name):
         write.writerows(content)
 
 if __name__ == '__main__':
-    data = gen_csv(generate_RR(6))
-    export(data, '6 team RR.csv')
+    data = gen_csv(generate_RR(12))
+    export(data, '12 team RR.csv')
