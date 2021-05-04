@@ -137,6 +137,18 @@ def join_h_matches(matches, order=None):
         matches[:, order] = matches[:, list(range(len(order)))]
     return matches
 
+def join_v_matches(matches):
+    '''
+    Join an array of matches vertically
+
+    Parameter:
+    ----------
+    matches: 3d list
+        a list with n horizontal sections in (numpy ndarray), where each section contain same number of rows (matches)
+    '''
+    matches = np.concatenate(matches, axis=0)
+    return matches
+
 def export(content, file_name):
     with open(file_name, 'w', newline='') as f:
         write = csv.writer(f, lineterminator=',\r\n')
